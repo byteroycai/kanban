@@ -10,7 +10,7 @@ datasource db {
 model Column {
   id     Int    @id @default(autoincrement())
   name   String
-  order  Int
+  order  Int    @unique
   tasks  Task[]
 }
 
