@@ -189,122 +189,104 @@ export default function Board({ initialColumns }: BoardProps) {
       <DragDropContext onDragEnd={handleDragEnd}>
         <div
           style={{
-            display: "flex",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
             gap: "1.5rem",
-            alignItems: "flex-start",
-            overflowX: "auto",
-            paddingBottom: "0.5rem"
+            alignItems: "flex-start"
           }}
         >
-          {columns.map((column, columnIndex) => {
-            const columnPalette = ["#eff6ff", "#f5f3ff", "#ecfdf5", "#fefce8"];
-            const columnBackground = columnPalette[columnIndex % columnPalette.length];
-
-            return (
-              <Droppable droppableId={column.id.toString()} key={column.id}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    style={{
-                      flex: "0 0 280px",
-                      minWidth: "260px",
-                      backgroundColor: snapshot.isDraggingOver
-                        ? "rgba(59, 130, 246, 0.16)"
-                        : columnBackground,
-                      border: "1px solid rgba(148, 163, 184, 0.25)",
-                      backdropFilter: "blur(6px)",
-                      borderRadius: "1rem",
-                      padding: "1rem",
-                      boxShadow:
-                        "0 20px 45px -20px rgba(15, 23, 42, 0.25), inset 0 1px 0 rgba(255,255,255,0.4)",
-                      minHeight: "280px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.75rem"
-                    }}
-                  >
-                    <header style={{ display: "flex", justifyContent: "space-between" }}>
-                      <div>
-                        <h2
-                          style={{
-                            margin: 0,
-                            fontSize: "1.2rem",
-                            fontWeight: 600
-                          }}
-                        >
-                          {column.name}
-                        </h2>
-                        <span style={{ fontSize: "0.85rem", color: "#64748b" }}>
-                          {column.tasks.length} tasks
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setActiveColumnId((current) =>
-                            current === column.id ? null : column.id
-                          )
-                        }
+          {columns.map((column) => (
+            <Droppable droppableId={column.id.toString()} key={column.id}>
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  style={{
+                    backgroundColor: snapshot.isDraggingOver
+                      ? "rgba(59, 130, 246, 0.15)"
+                      : "rgba(255, 255, 255, 0.75)",
+                    backdropFilter: "blur(6px)",
+                    borderRadius: "1rem",
+                    padding: "1rem",
+                    boxShadow:
+                      "0 20px 45px -20px rgba(15, 23, 42, 0.25), inset 0 1px 0 rgba(255,255,255,0.4)",
+                    minHeight: "280px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.75rem"
+                  }}
+                >
+                  <header style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div>
+                      <h2
                         style={{
-                          background: "none",
-                          border: "1px solid rgba(148, 163, 184, 0.5)",
-                          borderRadius: "999px",
-                          padding: "0.25rem 0.75rem",
-                          cursor: "pointer",
-                          fontSize: "0.85rem"
+                          margin: 0,
+                          fontSize: "1.2rem",
+                          fontWeight: 600
                         }}
                       >
-                        {activeColumnId === column.id ? "Close" : "+ Task"}
-                      </button>
-                    </header>
-                    {activeColumnId === column.id ? (
-                      <NewTaskForm
-                        onSubmit={async (values) => {
-                          await handleCreateTask(column.id, values);
-                        }}
-                        onCancel={() => setActiveColumnId(null)}
-                        isSubmitting={submittingColumnId === column.id}
-                      />
-                    ) : null}
-                    <div
+                        {column.name}
+                      </h2>
+                      <span style={{ fontSize: "0.85rem", color: "#64748b" }}>
+                        {column.tasks.length} tasks
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setActiveColumnId((current) =>
+                          current === column.id ? null : column.id
+                        )
+                      }
                       style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "0.75rem"
+                        background: "none",
+                        border: "1px solid rgba(148, 163, 184, 0.5)",
+                        borderRadius: "999px",
+                        padding: "0.25rem 0.75rem",
+                        cursor: "pointer",
+                        fontSize: "0.85rem"
                       }}
                     >
-                      {column.tasks.map((task, index) => (
-                        <Draggable
-                          draggableId={task.id.toString()}
-                          index={index}
-                          key={task.id}
-                        >
-                          {(dragProvided, dragSnapshot) => (
-                            <div
-                              ref={dragProvided.innerRef}
-                              {...dragProvided.draggableProps}
-                              {...dragProvided.dragHandleProps}
-                              style={{
-                                ...dragProvided.draggableProps.style,
-                                opacity: dragSnapshot.isDragging ? 0.75 : 1
-                              }}
-                            >
-                              <TaskCard
-                                task={task}
-                                column={columnsById.get(task.columnId)}
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
+                      {activeColumnId === column.id ? "Close" : "+ Task"}
+                    </button>
+                  </header>
+                  {activeColumnId === column.id ? (
+                    <NewTaskForm
+                      onSubmit={async (values) => {
+                        await handleCreateTask(column.id, values);
+                      }}
+                      onCancel={() => setActiveColumnId(null)}
+                      isSubmitting={submittingColumnId === column.id}
+                    />
+                  ) : null}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                    {column.tasks.map((task, index) => (
+                      <Draggable
+                        draggableId={task.id.toString()}
+                        index={index}
+                        key={task.id}
+                      >
+                        {(dragProvided, dragSnapshot) => (
+                          <div
+                            ref={dragProvided.innerRef}
+                            {...dragProvided.draggableProps}
+                            {...dragProvided.dragHandleProps}
+                            style={{
+                              ...dragProvided.draggableProps.style,
+                              opacity: dragSnapshot.isDragging ? 0.75 : 1
+                            }}
+                          >
+                            <TaskCard task={task} column={columnsById.get(task.columnId)} />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
                   </div>
-                )}
-              </Droppable>
-            );
-          })}
+                </div>
+              )}
+            </Droppable>
+          ))}
         </div>
       </DragDropContext>
     </div>
