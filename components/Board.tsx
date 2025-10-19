@@ -189,11 +189,10 @@ export default function Board({ initialColumns }: BoardProps) {
       <DragDropContext onDragEnd={handleDragEnd}>
         <div
           style={{
-            display: "flex",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
             gap: "1.5rem",
-            alignItems: "flex-start",
-            overflowX: "auto",
-            paddingBottom: "0.5rem"
+            alignItems: "flex-start"
           }}
         >
           {columns.map((column) => (
@@ -203,8 +202,6 @@ export default function Board({ initialColumns }: BoardProps) {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                   style={{
-                    flex: "0 0 280px",
-                    minWidth: "260px",
                     backgroundColor: snapshot.isDraggingOver
                       ? "rgba(59, 130, 246, 0.15)"
                       : "rgba(255, 255, 255, 0.75)",
