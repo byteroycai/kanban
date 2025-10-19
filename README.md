@@ -29,6 +29,13 @@ A simple Kanban project management board built with Next.js 14, React 18, Prisma
 
    Update the `DATABASE_URL` value if you prefer a different database location.
 
+   Create an `.env` file with the SQLite connection string (the default path stores the database in the `prisma` directory):
+
+   ```bash
+   echo "DATABASE_URL=sqlite:./prisma/dev.db" > .env
+   ```
+
+
 3. **Generate the Prisma client and push the schema**
 
    ```bash
